@@ -137,7 +137,11 @@ func main() {
 			//
 			// With other DEs, the X connection will still stay open even after the
 			// X window is closed. For these DEs (e.g. i3) we have to check whether
-			// the WM sent us a DestroyNotifyEvent and close our program:
+			// the WM sent us a DestroyNotifyEvent and close our program.
+			//
+			// For more information about closing windows while maintaining
+			// the X connection see
+			// https://github.com/jezek/xgbutil/blob/master/_examples/graceful-window-close/main.go
 			return
 		}
 	}
