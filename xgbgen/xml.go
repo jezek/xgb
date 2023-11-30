@@ -57,7 +57,7 @@ func (imports XMLImports) Eval() {
 
 type XMLImport struct {
 	Name string `xml:",chardata"`
-	xml  *XML   `xml:"-"`
+	xml  *XML
 }
 
 type XMLEnum struct {
