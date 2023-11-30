@@ -74,7 +74,7 @@ func (err BadRegionError) BadId() uint32 {
 // Error returns a rudimentary string representation of the BadBadRegion error.
 
 func (err BadRegionError) Error() string {
-	fieldVals := make([]string, 0, 0)
+	fieldVals := make([]string, 0)
 	fieldVals = append(fieldVals, "NiceName: "+err.NiceName)
 	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", err.Sequence))
 	return "BadBadRegion {" + xgb.StringsJoin(fieldVals, ", ") + "}"

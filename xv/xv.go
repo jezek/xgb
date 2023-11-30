@@ -282,7 +282,7 @@ func (err BadControlError) BadId() uint32 {
 // Error returns a rudimentary string representation of the BadBadControl error.
 
 func (err BadControlError) Error() string {
-	fieldVals := make([]string, 0, 0)
+	fieldVals := make([]string, 0)
 	fieldVals = append(fieldVals, "NiceName: "+err.NiceName)
 	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", err.Sequence))
 	return "BadBadControl {" + xgb.StringsJoin(fieldVals, ", ") + "}"
@@ -328,7 +328,7 @@ func (err BadEncodingError) BadId() uint32 {
 // Error returns a rudimentary string representation of the BadBadEncoding error.
 
 func (err BadEncodingError) Error() string {
-	fieldVals := make([]string, 0, 0)
+	fieldVals := make([]string, 0)
 	fieldVals = append(fieldVals, "NiceName: "+err.NiceName)
 	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", err.Sequence))
 	return "BadBadEncoding {" + xgb.StringsJoin(fieldVals, ", ") + "}"
@@ -374,7 +374,7 @@ func (err BadPortError) BadId() uint32 {
 // Error returns a rudimentary string representation of the BadBadPort error.
 
 func (err BadPortError) Error() string {
-	fieldVals := make([]string, 0, 0)
+	fieldVals := make([]string, 0)
 	fieldVals = append(fieldVals, "NiceName: "+err.NiceName)
 	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", err.Sequence))
 	return "BadBadPort {" + xgb.StringsJoin(fieldVals, ", ") + "}"

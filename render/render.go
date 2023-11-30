@@ -310,7 +310,7 @@ func (err GlyphError) BadId() uint32 {
 // Error returns a rudimentary string representation of the BadGlyph error.
 
 func (err GlyphError) Error() string {
-	fieldVals := make([]string, 0, 0)
+	fieldVals := make([]string, 0)
 	fieldVals = append(fieldVals, "NiceName: "+err.NiceName)
 	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", err.Sequence))
 	return "BadGlyph {" + xgb.StringsJoin(fieldVals, ", ") + "}"
@@ -356,7 +356,7 @@ func (err GlyphSetError) BadId() uint32 {
 // Error returns a rudimentary string representation of the BadGlyphSet error.
 
 func (err GlyphSetError) Error() string {
-	fieldVals := make([]string, 0, 0)
+	fieldVals := make([]string, 0)
 	fieldVals = append(fieldVals, "NiceName: "+err.NiceName)
 	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", err.Sequence))
 	return "BadGlyphSet {" + xgb.StringsJoin(fieldVals, ", ") + "}"
@@ -629,7 +629,7 @@ func (err PictFormatError) BadId() uint32 {
 // Error returns a rudimentary string representation of the BadPictFormat error.
 
 func (err PictFormatError) Error() string {
-	fieldVals := make([]string, 0, 0)
+	fieldVals := make([]string, 0)
 	fieldVals = append(fieldVals, "NiceName: "+err.NiceName)
 	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", err.Sequence))
 	return "BadPictFormat {" + xgb.StringsJoin(fieldVals, ", ") + "}"
@@ -731,7 +731,7 @@ func (err PictOpError) BadId() uint32 {
 // Error returns a rudimentary string representation of the BadPictOp error.
 
 func (err PictOpError) Error() string {
-	fieldVals := make([]string, 0, 0)
+	fieldVals := make([]string, 0)
 	fieldVals = append(fieldVals, "NiceName: "+err.NiceName)
 	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", err.Sequence))
 	return "BadPictOp {" + xgb.StringsJoin(fieldVals, ", ") + "}"
@@ -1033,7 +1033,7 @@ func (err PictureError) BadId() uint32 {
 // Error returns a rudimentary string representation of the BadPicture error.
 
 func (err PictureError) Error() string {
-	fieldVals := make([]string, 0, 0)
+	fieldVals := make([]string, 0)
 	fieldVals = append(fieldVals, "NiceName: "+err.NiceName)
 	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", err.Sequence))
 	return "BadPicture {" + xgb.StringsJoin(fieldVals, ", ") + "}"

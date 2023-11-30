@@ -356,7 +356,7 @@ type evErr struct {
 }
 
 // channel used to pass evErrs.
-var evOrErrChan = make(chan evErr, 0)
+var evOrErrChan = make(chan evErr)
 
 // grabEvents is a goroutine that reads events off the wire.
 // We used this instead of WaitForEvent directly in our tests so that

@@ -73,7 +73,7 @@ func (err BadDamageError) BadId() uint32 {
 // Error returns a rudimentary string representation of the BadBadDamage error.
 
 func (err BadDamageError) Error() string {
-	fieldVals := make([]string, 0, 0)
+	fieldVals := make([]string, 0)
 	fieldVals = append(fieldVals, "NiceName: "+err.NiceName)
 	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", err.Sequence))
 	return "BadBadDamage {" + xgb.StringsJoin(fieldVals, ", ") + "}"

@@ -73,7 +73,7 @@ func (err BadCrtcError) BadId() uint32 {
 // Error returns a rudimentary string representation of the BadBadCrtc error.
 
 func (err BadCrtcError) Error() string {
-	fieldVals := make([]string, 0, 0)
+	fieldVals := make([]string, 0)
 	fieldVals = append(fieldVals, "NiceName: "+err.NiceName)
 	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", err.Sequence))
 	return "BadBadCrtc {" + xgb.StringsJoin(fieldVals, ", ") + "}"
@@ -119,7 +119,7 @@ func (err BadModeError) BadId() uint32 {
 // Error returns a rudimentary string representation of the BadBadMode error.
 
 func (err BadModeError) Error() string {
-	fieldVals := make([]string, 0, 0)
+	fieldVals := make([]string, 0)
 	fieldVals = append(fieldVals, "NiceName: "+err.NiceName)
 	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", err.Sequence))
 	return "BadBadMode {" + xgb.StringsJoin(fieldVals, ", ") + "}"
@@ -165,7 +165,7 @@ func (err BadOutputError) BadId() uint32 {
 // Error returns a rudimentary string representation of the BadBadOutput error.
 
 func (err BadOutputError) Error() string {
-	fieldVals := make([]string, 0, 0)
+	fieldVals := make([]string, 0)
 	fieldVals = append(fieldVals, "NiceName: "+err.NiceName)
 	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", err.Sequence))
 	return "BadBadOutput {" + xgb.StringsJoin(fieldVals, ", ") + "}"
@@ -211,7 +211,7 @@ func (err BadProviderError) BadId() uint32 {
 // Error returns a rudimentary string representation of the BadBadProvider error.
 
 func (err BadProviderError) Error() string {
-	fieldVals := make([]string, 0, 0)
+	fieldVals := make([]string, 0)
 	fieldVals = append(fieldVals, "NiceName: "+err.NiceName)
 	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", err.Sequence))
 	return "BadBadProvider {" + xgb.StringsJoin(fieldVals, ", ") + "}"

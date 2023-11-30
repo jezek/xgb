@@ -84,7 +84,7 @@ func (c *Conn) postConnect() error {
 		return fmt.Errorf("x protocol version mismatch: %d.%d", major, minor)
 	}
 
-	buf = make([]byte, int(dataLen)*4+8, int(dataLen)*4+8)
+	buf = make([]byte, int(dataLen)*4+8)
 	copy(buf, head)
 	if _, err = io.ReadFull(c.conn, buf[8:]); err != nil {
 		return err

@@ -72,7 +72,7 @@ func (err BadClockError) BadId() uint32 {
 // Error returns a rudimentary string representation of the BadBadClock error.
 
 func (err BadClockError) Error() string {
-	fieldVals := make([]string, 0, 0)
+	fieldVals := make([]string, 0)
 	fieldVals = append(fieldVals, "NiceName: "+err.NiceName)
 	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", err.Sequence))
 	return "BadBadClock {" + xgb.StringsJoin(fieldVals, ", ") + "}"
@@ -118,7 +118,7 @@ func (err BadHTimingsError) BadId() uint32 {
 // Error returns a rudimentary string representation of the BadBadHTimings error.
 
 func (err BadHTimingsError) Error() string {
-	fieldVals := make([]string, 0, 0)
+	fieldVals := make([]string, 0)
 	fieldVals = append(fieldVals, "NiceName: "+err.NiceName)
 	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", err.Sequence))
 	return "BadBadHTimings {" + xgb.StringsJoin(fieldVals, ", ") + "}"
@@ -164,7 +164,7 @@ func (err BadVTimingsError) BadId() uint32 {
 // Error returns a rudimentary string representation of the BadBadVTimings error.
 
 func (err BadVTimingsError) Error() string {
-	fieldVals := make([]string, 0, 0)
+	fieldVals := make([]string, 0)
 	fieldVals = append(fieldVals, "NiceName: "+err.NiceName)
 	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", err.Sequence))
 	return "BadBadVTimings {" + xgb.StringsJoin(fieldVals, ", ") + "}"
@@ -210,7 +210,7 @@ func (err ClientNotLocalError) BadId() uint32 {
 // Error returns a rudimentary string representation of the BadClientNotLocal error.
 
 func (err ClientNotLocalError) Error() string {
-	fieldVals := make([]string, 0, 0)
+	fieldVals := make([]string, 0)
 	fieldVals = append(fieldVals, "NiceName: "+err.NiceName)
 	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", err.Sequence))
 	return "BadClientNotLocal {" + xgb.StringsJoin(fieldVals, ", ") + "}"
@@ -262,7 +262,7 @@ func (err ExtensionDisabledError) BadId() uint32 {
 // Error returns a rudimentary string representation of the BadExtensionDisabled error.
 
 func (err ExtensionDisabledError) Error() string {
-	fieldVals := make([]string, 0, 0)
+	fieldVals := make([]string, 0)
 	fieldVals = append(fieldVals, "NiceName: "+err.NiceName)
 	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", err.Sequence))
 	return "BadExtensionDisabled {" + xgb.StringsJoin(fieldVals, ", ") + "}"
@@ -458,7 +458,7 @@ func (err ModeUnsuitableError) BadId() uint32 {
 // Error returns a rudimentary string representation of the BadModeUnsuitable error.
 
 func (err ModeUnsuitableError) Error() string {
-	fieldVals := make([]string, 0, 0)
+	fieldVals := make([]string, 0)
 	fieldVals = append(fieldVals, "NiceName: "+err.NiceName)
 	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", err.Sequence))
 	return "BadModeUnsuitable {" + xgb.StringsJoin(fieldVals, ", ") + "}"
@@ -511,7 +511,7 @@ func (err ZoomLockedError) BadId() uint32 {
 // Error returns a rudimentary string representation of the BadZoomLocked error.
 
 func (err ZoomLockedError) Error() string {
-	fieldVals := make([]string, 0, 0)
+	fieldVals := make([]string, 0)
 	fieldVals = append(fieldVals, "NiceName: "+err.NiceName)
 	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", err.Sequence))
 	return "BadZoomLocked {" + xgb.StringsJoin(fieldVals, ", ") + "}"

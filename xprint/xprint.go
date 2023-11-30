@@ -148,7 +148,7 @@ func (err BadContextError) BadId() uint32 {
 // Error returns a rudimentary string representation of the BadBadContext error.
 
 func (err BadContextError) Error() string {
-	fieldVals := make([]string, 0, 0)
+	fieldVals := make([]string, 0)
 	fieldVals = append(fieldVals, "NiceName: "+err.NiceName)
 	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", err.Sequence))
 	return "BadBadContext {" + xgb.StringsJoin(fieldVals, ", ") + "}"
@@ -194,7 +194,7 @@ func (err BadSequenceError) BadId() uint32 {
 // Error returns a rudimentary string representation of the BadBadSequence error.
 
 func (err BadSequenceError) Error() string {
-	fieldVals := make([]string, 0, 0)
+	fieldVals := make([]string, 0)
 	fieldVals = append(fieldVals, "NiceName: "+err.NiceName)
 	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", err.Sequence))
 	return "BadBadSequence {" + xgb.StringsJoin(fieldVals, ", ") + "}"
