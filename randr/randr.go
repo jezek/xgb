@@ -2590,7 +2590,7 @@ func createModeRequest(c *xgb.Conn, Window xproto.Window, ModeInfo ModeInfo, Nam
 		b += len(structBytes)
 	}
 
-	copy(buf[b:], Name[:len(Name)])
+	copy(buf[b:], Name)
 	b += int(len(Name))
 
 	return buf

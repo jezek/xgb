@@ -10059,7 +10059,7 @@ func renderRequest(c *xgb.Conn, ContextTag ContextTag, Data []byte) []byte {
 	xgb.Put32(buf[b:], uint32(ContextTag))
 	b += 4
 
-	copy(buf[b:], Data[:len(Data)])
+	copy(buf[b:], Data)
 	b += int(len(Data))
 
 	return buf
@@ -10691,7 +10691,7 @@ func vendorPrivateRequest(c *xgb.Conn, VendorCode uint32, ContextTag ContextTag,
 	xgb.Put32(buf[b:], uint32(ContextTag))
 	b += 4
 
-	copy(buf[b:], Data[:len(Data)])
+	copy(buf[b:], Data)
 	b += int(len(Data))
 
 	return buf
@@ -10801,7 +10801,7 @@ func vendorPrivateWithReplyRequest(c *xgb.Conn, VendorCode uint32, ContextTag Co
 	xgb.Put32(buf[b:], uint32(ContextTag))
 	b += 4
 
-	copy(buf[b:], Data[:len(Data)])
+	copy(buf[b:], Data)
 	b += int(len(Data))
 
 	return buf

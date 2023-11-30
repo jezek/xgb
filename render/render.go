@@ -1641,7 +1641,7 @@ func addGlyphsRequest(c *xgb.Conn, Glyphset Glyphset, GlyphsLen uint32, Glyphids
 
 	b += GlyphinfoListBytes(buf[b:], Glyphs)
 
-	copy(buf[b:], Data[:len(Data)])
+	copy(buf[b:], Data)
 	b += int(len(Data))
 
 	return buf
@@ -1960,7 +1960,7 @@ func compositeGlyphs16Request(c *xgb.Conn, Op byte, Src Picture, Dst Picture, Ma
 	xgb.Put16(buf[b:], uint16(SrcY))
 	b += 2
 
-	copy(buf[b:], Glyphcmds[:len(Glyphcmds)])
+	copy(buf[b:], Glyphcmds)
 	b += int(len(Glyphcmds))
 
 	return buf
@@ -2044,7 +2044,7 @@ func compositeGlyphs32Request(c *xgb.Conn, Op byte, Src Picture, Dst Picture, Ma
 	xgb.Put16(buf[b:], uint16(SrcY))
 	b += 2
 
-	copy(buf[b:], Glyphcmds[:len(Glyphcmds)])
+	copy(buf[b:], Glyphcmds)
 	b += int(len(Glyphcmds))
 
 	return buf
@@ -2128,7 +2128,7 @@ func compositeGlyphs8Request(c *xgb.Conn, Op byte, Src Picture, Dst Picture, Mas
 	xgb.Put16(buf[b:], uint16(SrcY))
 	b += 2
 
-	copy(buf[b:], Glyphcmds[:len(Glyphcmds)])
+	copy(buf[b:], Glyphcmds)
 	b += int(len(Glyphcmds))
 
 	return buf

@@ -138,7 +138,7 @@ func (c *Conn) dial(display string) error {
 		}
 	}
 
-	display = display[colonIdx+1 : len(display)]
+	display = display[colonIdx+1:]
 	if len(display) == 0 {
 		return errors.New("bad display string: " + display0)
 	}

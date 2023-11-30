@@ -1775,7 +1775,7 @@ func putImageRequest(c *xgb.Conn, Port Port, Drawable xproto.Drawable, Gc xproto
 	xgb.Put16(buf[b:], Height)
 	b += 2
 
-	copy(buf[b:], Data[:len(Data)])
+	copy(buf[b:], Data)
 	b += int(len(Data))
 
 	return buf

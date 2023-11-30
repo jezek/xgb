@@ -12461,7 +12461,7 @@ func polyText16Request(c *xgb.Conn, Drawable Drawable, Gc Gcontext, X int16, Y i
 	xgb.Put16(buf[b:], uint16(Y))
 	b += 2
 
-	copy(buf[b:], Items[:len(Items)])
+	copy(buf[b:], Items)
 	b += int(len(Items))
 
 	return buf
@@ -12521,7 +12521,7 @@ func polyText8Request(c *xgb.Conn, Drawable Drawable, Gc Gcontext, X int16, Y in
 	xgb.Put16(buf[b:], uint16(Y))
 	b += 2
 
-	copy(buf[b:], Items[:len(Items)])
+	copy(buf[b:], Items)
 	b += int(len(Items))
 
 	return buf
@@ -12596,7 +12596,7 @@ func putImageRequest(c *xgb.Conn, Format byte, Drawable Drawable, Gc Gcontext, W
 
 	b += 2 // padding
 
-	copy(buf[b:], Data[:len(Data)])
+	copy(buf[b:], Data)
 	b += int(len(Data))
 
 	return buf
