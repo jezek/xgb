@@ -38,7 +38,7 @@ func leaksMonitor(name string, monitors ...*leaks) *leaks {
 // ispired by https://golang.org/src/runtime/debug/stack.go?s=587:606#L21
 // stack returns a formatted stack trace of all goroutines.
 // It calls runtime.Stack with a large enough buffer to capture the entire trace.
-func (_ leaks) stack() []byte {
+func (leaks) stack() []byte {
 	buf := make([]byte, 1024)
 	for {
 		n := runtime.Stack(buf, true)
@@ -122,8 +122,8 @@ type dAddr struct {
 	s string
 }
 
-func (_ dAddr) Network() string { return "dummy" }
-func (a dAddr) String() string  { return a.s }
+func (dAddr) Network() string  { return "dummy" }
+func (a dAddr) String() string { return a.s }
 
 var (
 	errNotImplemented = errors.New("command not implemented")
@@ -373,16 +373,16 @@ func (s *dNC) ReadSuccess() error {
 
 type dXSEvent struct{}
 
-func (_ dXSEvent) Bytes() []byte  { return nil }
-func (_ dXSEvent) String() string { return "dummy X server event" }
+func (dXSEvent) Bytes() []byte  { return nil }
+func (dXSEvent) String() string { return "dummy X server event" }
 
 type dXSError struct {
 	seqId uint16
 }
 
 func (e dXSError) SequenceId() uint16 { return e.seqId }
-func (_ dXSError) BadId() uint32      { return 0 }
-func (_ dXSError) Error() string      { return "dummy X server error reply" }
+func (dXSError) BadId() uint32        { return 0 }
+func (dXSError) Error() string        { return "dummy X server error reply" }
 
 func newDummyXServerReplier() func([]byte) []byte {
 	// register xgb error & event replies
