@@ -1,7 +1,6 @@
 package xgb
 
 import (
-	"errors"
 	"fmt"
 	"testing"
 	"time"
@@ -19,10 +18,10 @@ func TestConnOnNonBlockingDummyXServer(t *testing.T) {
 			c.NewRequest([]byte(request), cookie)
 			_, err := cookie.Reply()
 			if wantError && err == nil {
-				return errors.New(fmt.Sprintf("checked request \"%v\" with reply resulted in nil error, want some error", request))
+				return fmt.Errorf("checked request \"%v\" with reply resulted in nil error, want some error", request)
 			}
 			if !wantError && err != nil {
-				return errors.New(fmt.Sprintf("checked request \"%v\" with reply resulted in error %v, want nil error", request, err))
+				return fmt.Errorf("checked request \"%v\" with reply resulted in error %v, want nil error", request, err)
 			}
 			return nil
 		}
@@ -37,10 +36,10 @@ func TestConnOnNonBlockingDummyXServer(t *testing.T) {
 			c.NewRequest([]byte(request), cookie)
 			err := cookie.Check()
 			if wantError && err == nil {
-				return errors.New(fmt.Sprintf("checked request \"%v\" with no reply resulted in nil error, want some error", request))
+				return fmt.Errorf("checked request \"%v\" with no reply resulted in nil error, want some error", request)
 			}
 			if !wantError && err != nil {
-				return errors.New(fmt.Sprintf("checked request \"%v\" with no reply resulted in error %v, want nil error", request, err))
+				return fmt.Errorf("checked request \"%v\" with no reply resulted in error %v, want nil error", request, err)
 			}
 			return nil
 		}
@@ -55,7 +54,7 @@ func TestConnOnNonBlockingDummyXServer(t *testing.T) {
 			c.NewRequest([]byte(request), cookie)
 			_, err := cookie.Reply()
 			if err != nil {
-				return errors.New(fmt.Sprintf("unchecked request \"%v\" with reply resulted in %v, want nil", request, err))
+				return fmt.Errorf("unchecked request \"%v\" with reply resulted in %v, want nil", request, err)
 			}
 			return nil
 		}
@@ -75,7 +74,7 @@ func TestConnOnNonBlockingDummyXServer(t *testing.T) {
 		return func(c *Conn) error {
 			_, err := c.conn.Write([]byte("event"))
 			if err != nil {
-				return errors.New(fmt.Sprintf("asked dummy server to send event, but resulted in error: %v\n", err))
+				return fmt.Errorf("asked dummy server to send event, but resulted in error: %v\n", err)
 			}
 			return err
 		}
@@ -84,10 +83,10 @@ func TestConnOnNonBlockingDummyXServer(t *testing.T) {
 		return func(c *Conn) error {
 			_, err := c.WaitForEvent()
 			if wantError && err == nil {
-				return errors.New(fmt.Sprintf("wait for event resulted in nil error, want some error"))
+				return fmt.Errorf("wait for event resulted in nil error, want some error")
 			}
 			if !wantError && err != nil {
-				return errors.New(fmt.Sprintf("wait for event resulted in error %v, want nil error", err))
+				return fmt.Errorf("wait for event resulted in error %v, want nil error", err)
 			}
 			return nil
 		}

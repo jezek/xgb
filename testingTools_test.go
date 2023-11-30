@@ -117,11 +117,11 @@ func TestDummyNetConn(t *testing.T) {
 			select {
 			case err := <-actionResult:
 				if err != want {
-					return errors.New(fmt.Sprintf("action result=%v, want %v", err, want))
+					return fmt.Errorf("action result=%v, want %v", err, want)
 				}
 			case <-time.After(timeout):
 				close(timedOut)
-				return errors.New(fmt.Sprintf("action did not respond for %v, result want %v", timeout, want))
+				return fmt.Errorf("action did not respond for %v, result want %v", timeout, want)
 			}
 			return nil
 		}
@@ -142,7 +142,7 @@ func TestDummyNetConn(t *testing.T) {
 			}()
 			select {
 			case err := <-actionResult:
-				return errors.New(fmt.Sprintf("action result=%v, want to be blocked", err))
+				return fmt.Errorf("action result=%v, want to be blocked", err)
 			case <-time.After(timeout):
 				close(timedOut)
 			}
