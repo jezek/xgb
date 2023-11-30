@@ -212,7 +212,7 @@ func (r *Request) ParamNames() string {
 		case *ExprField:
 			continue
 		default:
-			names = append(names, fmt.Sprintf("%s", field.SrcName()))
+			names = append(names, field.SrcName())
 		}
 	}
 	return strings.Join(names, ", ")
