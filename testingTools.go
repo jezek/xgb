@@ -126,10 +126,10 @@ func (_ dAddr) Network() string { return "dummy" }
 func (a dAddr) String() string  { return a.s }
 
 var (
-	dNCErrNotImplemented = errors.New("command not implemented")
-	dNCErrClosed         = errors.New("server closed")
-	dNCErrWrite          = errors.New("server write failed")
-	dNCErrRead           = errors.New("server read failed")
+	errNotImplemented = errors.New("command not implemented")
+	errClosed         = errors.New("server closed")
+	errWrite          = errors.New("server write failed")
+	errRead           = errors.New("server read failed")
 )
 
 type dNCIoResult struct {
@@ -186,7 +186,7 @@ func newDummyNetConn(name string, reply func([]byte) []byte) *dNC {
 			select {
 			case dxsio := <-in:
 				if errorWrite {
-					dxsio.result <- dNCIoResult{0, dNCErrWrite}
+					dxsio.result <- dNCIoResult{0, errWrite}
 					break
 				}
 
@@ -200,7 +200,7 @@ func newDummyNetConn(name string, reply func([]byte) []byte) *dNC {
 				}
 			case dxsio := <-out:
 				if errorRead {
-					dxsio.result <- dNCIoResult{0, dNCErrRead}
+					dxsio.result <- dNCIoResult{0, errRead}
 					break
 				}
 
@@ -244,7 +244,7 @@ func newDummyNetConn(name string, reply func([]byte) []byte) *dNC {
 }
 
 // Shuts down dummy net.Conn server. Every blocking or future method calls will do nothing and result in error.
-// Result will be dNCErrClosed if server was allready closed.
+// Result will be errClosed if server was allready closed.
 // Server can not be unclosed.
 func (s *dNC) Close() error {
 	select {
@@ -253,7 +253,7 @@ func (s *dNC) Close() error {
 		return nil
 	case <-s.done:
 	}
-	return dNCErrClosed
+	return errClosed
 }
 
 // Performs a write action to server.
@@ -262,13 +262,13 @@ func (s *dNC) Close() error {
 // This method can be set to result in error or success, via (*dNC).WriteError() or (*dNC).WriteSuccess() methods.
 //
 // If setted to result in error, the 'reply' function will NOT be called and internal buffer will NOT increasethe.
-// Result will be (0, dNCErrWrite).
+// Result will be (0, errWrite).
 //
 // If setted to result in success, the 'reply' function will be called and its result will be writen to internal buffer.
 // If there is something in the internal buffer, the (*dNC).Read([...]) will be unblocked (if not previously locked with (*dNC).ReadLock).
 // Result will be (len(b), nil)
 //
-// If server was closed previously, result will be (0, dNCErrClosed).
+// If server was closed previously, result will be (0, errClosed).
 func (s *dNC) Write(b []byte) (int, error) {
 	resChan := make(chan dNCIoResult)
 	select {
@@ -277,7 +277,7 @@ func (s *dNC) Write(b []byte) (int, error) {
 		return res.n, res.err
 	case <-s.done:
 	}
-	return 0, dNCErrClosed
+	return 0, errClosed
 }
 
 // Performs a read action from server.
@@ -285,7 +285,7 @@ func (s *dNC) Write(b []byte) (int, error) {
 //
 // If not locked, this method can be setted to result imidiatly in error, will block if internal buffer is empty or will perform an read operation from internal buffer.
 //
-// If setted to result in error via (*dNC).ReadError(), the result will be (0, dNCErrWrite).
+// If setted to result in error via (*dNC).ReadError(), the result will be (0, errWrite).
 //
 // If not locked and not setted to result in error via (*dNC).ReadSuccess(), this method will block until internall buffer is not empty, than it returns the result of the buffer read operation via (*bytes.Buffer).Read([...]).
 // If the internal buffer is empty after this method, all follwing (*dNC).Read([...]), requests will block until internall buffer is filled after successful write requests.
@@ -303,9 +303,9 @@ func (s *dNC) Read(b []byte) (int, error) {
 }
 func (s *dNC) LocalAddr() net.Addr                { return s.addr }
 func (s *dNC) RemoteAddr() net.Addr               { return s.addr }
-func (s *dNC) SetDeadline(t time.Time) error      { return dNCErrNotImplemented }
-func (s *dNC) SetReadDeadline(t time.Time) error  { return dNCErrNotImplemented }
-func (s *dNC) SetWriteDeadline(t time.Time) error { return dNCErrNotImplemented }
+func (s *dNC) SetDeadline(t time.Time) error      { return errNotImplemented }
+func (s *dNC) SetReadDeadline(t time.Time) error  { return errNotImplemented }
+func (s *dNC) SetWriteDeadline(t time.Time) error { return errNotImplemented }
 
 func (s *dNC) Control(i interface{}) error {
 	select {
@@ -313,7 +313,7 @@ func (s *dNC) Control(i interface{}) error {
 		return nil
 	case <-s.done:
 	}
-	return dNCErrClosed
+	return errClosed
 }
 
 // Locks writing. All write requests will be blocked until write is unlocked with (*dNC).WriteUnlock, or server closes.
@@ -326,7 +326,7 @@ func (s *dNC) WriteUnlock() error {
 	return s.Control(dNCCWriteUnlock{})
 }
 
-// Unlocks writing and makes (*dNC).Write to result (0, dNCErrWrite).
+// Unlocks writing and makes (*dNC).Write to result (0, errWrite).
 func (s *dNC) WriteError() error {
 	if err := s.WriteUnlock(); err != nil {
 		return err
