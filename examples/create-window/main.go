@@ -111,15 +111,14 @@ func main() {
 		// accordingly. All events are defined in the xproto subpackage.
 		// To receive events, we have to first register it using
 		// either xproto.CreateWindow or xproto.ChangeWindowAttributes.
-		switch ev.(type) {
+		switch e := ev.(type) {
 		case xproto.KeyPressEvent:
 			// See https://pkg.go.dev/github.com/jezek/xgb/xproto#KeyPressEvent
 			// for documentation about a key press event.
-			kpe := ev.(xproto.KeyPressEvent)
-			fmt.Printf("Key pressed: %d\n", kpe.Detail)
+			fmt.Printf("Key pressed: %d\n", e.Detail)
 			// The Detail value depends on the keyboard layout,
 			// for QWERTY, q is #24.
-			if kpe.Detail == 24 {
+			if e.Detail == 24 {
 				return // exit on q
 			}
 		case xproto.DestroyNotifyEvent:
