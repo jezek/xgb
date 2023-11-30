@@ -87,6 +87,7 @@ func NewConn() (*Conn, error) {
 // If 'display' is empty it will be taken from os.Getenv("DISPLAY").
 //
 // Examples:
+//
 //	NewConn(":1") -> net.Dial("unix", "", "/tmp/.X11-unix/X1")
 //	NewConn("/tmp/launch-12/:0") -> net.Dial("unix", "", "/tmp/launch-12/:0")
 //	NewConn("hostname:2.1") -> net.Dial("tcp", "", "hostname:6002")
@@ -252,7 +253,7 @@ func (c *Conn) generateXIds() {
 	max := c.setupResourceIdMask
 	last := uint32(0)
 	for {
-		id := xid{}
+		var id xid
 		if last > 0 && last >= max-inc+1 {
 			// TODO: Use the XC Misc extension to look for released ids.
 			id = xid{

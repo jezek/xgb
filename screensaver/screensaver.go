@@ -562,7 +562,6 @@ func setAttributesRequest(c *xgb.Conn, Drawable xproto.Drawable, X int16, Y int1
 		xgb.Put32(buf[b:], ValueList[i])
 		b += 4
 	}
-	b = xgb.Pad(b)
 
 	return buf
 }

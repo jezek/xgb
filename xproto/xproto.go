@@ -7135,7 +7135,6 @@ func changeGCRequest(c *xgb.Conn, Gc Gcontext, ValueMask uint32, ValueList []uin
 		xgb.Put32(buf[b:], ValueList[i])
 		b += 4
 	}
-	b = xgb.Pad(b)
 
 	return buf
 }
@@ -7246,7 +7245,6 @@ func changeKeyboardControlRequest(c *xgb.Conn, ValueMask uint32, ValueList []uin
 		xgb.Put32(buf[b:], ValueList[i])
 		b += 4
 	}
-	b = xgb.Pad(b)
 
 	return buf
 }
@@ -7545,7 +7543,6 @@ func changeWindowAttributesRequest(c *xgb.Conn, Window Window, ValueMask uint32,
 		xgb.Put32(buf[b:], ValueList[i])
 		b += 4
 	}
-	b = xgb.Pad(b)
 
 	return buf
 }
@@ -7766,7 +7763,6 @@ func configureWindowRequest(c *xgb.Conn, Window Window, ValueMask uint16, ValueL
 		xgb.Put32(buf[b:], ValueList[i])
 		b += 4
 	}
-	b = xgb.Pad(b)
 
 	return buf
 }
@@ -8271,7 +8267,6 @@ func createGCRequest(c *xgb.Conn, Cid Gcontext, Drawable Drawable, ValueMask uin
 		xgb.Put32(buf[b:], ValueList[i])
 		b += 4
 	}
-	b = xgb.Pad(b)
 
 	return buf
 }
@@ -8489,7 +8484,6 @@ func createWindowRequest(c *xgb.Conn, Depth byte, Wid Window, Parent Window, X i
 		xgb.Put32(buf[b:], ValueList[i])
 		b += 4
 	}
-	b = xgb.Pad(b)
 
 	return buf
 }

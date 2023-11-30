@@ -1781,7 +1781,6 @@ func changePictureRequest(c *xgb.Conn, Picture Picture, ValueMask uint32, ValueL
 		xgb.Put32(buf[b:], ValueList[i])
 		b += 4
 	}
-	b = xgb.Pad(b)
 
 	return buf
 }
@@ -2565,7 +2564,6 @@ func createPictureRequest(c *xgb.Conn, Pid Picture, Drawable xproto.Drawable, Fo
 		xgb.Put32(buf[b:], ValueList[i])
 		b += 4
 	}
-	b = xgb.Pad(b)
 
 	return buf
 }
