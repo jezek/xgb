@@ -84,7 +84,6 @@ func readAuthority(hostname, display string) (
 			return name0, data0, nil
 		}
 	}
-	panic("unreachable")
 }
 
 func getBytes(r io.Reader, b []byte) ([]byte, error) {

@@ -69,13 +69,11 @@ func TestDummyNetConn(t *testing.T) {
 			writeState, writeSetter := writeState, writeSetters[writeState]
 			if writeSetter == nil {
 				panic("unknown write state: " + writeState)
-				continue
 			}
 			for _, readState := range readStates {
 				readState, readSetter := readState, readSetters[readState]
 				if readSetter == nil {
 					panic("unknown read state: " + readState)
-					continue
 				}
 				res = append(res, func() (*dNC, error) {
 
