@@ -9,7 +9,7 @@ type XMLField struct {
 	XMLName xml.Name
 
 	// For 'pad' element
-	Bytes uint `xml:"bytes,attr"`
+	Bytes uint   `xml:"bytes,attr"`
 	Align uint16 `xml:"align,attr"`
 
 	// For 'field', 'list', 'localfield', 'exprfield' and 'switch' elements.

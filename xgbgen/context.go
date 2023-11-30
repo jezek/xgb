@@ -49,7 +49,7 @@ func (c *Context) Morph(xmlBytes []byte) {
 
 	// Translate XML types to nice types
 	c.protocol = parsedXml.Translate(nil)
-	
+
 	// For backwards compatibility we patch the type of the send_event field of
 	// PutImage to be byte
 	if c.protocol.Name == "shm" {
@@ -62,7 +62,7 @@ func (c *Context) Morph(xmlBytes []byte) {
 				if !ok || field.xmlName != "send_event" {
 					continue
 				}
-				field.Type = &Base{ srcName: "byte", xmlName: "CARD8", size: newFixedSize(1, true) }
+				field.Type = &Base{srcName: "byte", xmlName: "CARD8", size: newFixedSize(1, true)}
 			}
 		}
 	}

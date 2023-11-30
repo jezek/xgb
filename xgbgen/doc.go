@@ -3,9 +3,11 @@ xgbgen constructs Go source files from xproto XML description files. xgbgen
 accomplishes the same task as the Python code generator for XCB and xpyb.
 
 Usage:
+
 	xgbgen [flags] some-protocol.xml
 
 The flags are:
+
 	--proto-path path
 		The path to a directory containing xproto XML description files.
 		This is only necessary when 'some-protocol.xml' imports other
@@ -16,7 +18,7 @@ The flags are:
 		errors that need to be debugged in code generation. gofmt will hiccup;
 		this will allow you to see the raw code.
 
-How it works
+# How it works
 
 xgbgen works by parsing the input XML file using Go's encoding/xml package.
 The majority of this work is done in xml.go and xml_fields.go, where the
@@ -50,13 +52,13 @@ I'd be happy to try and make xgbgen a little more friendly in this regard.
 I did, however, design xgbgen with this in mind, so it shouldn't involve
 anything as serious as a re-design.)
 
-Why
+# Why
 
 I wrote xgbgen because I found the existing code generator that was written in
 Python to be unwieldy. In particular, static and strong typing greatly helped
 me reason better about the code generation task.
 
-What does not work
+# What does not work
 
 The core X protocol should be completely working. As far as I know, most
 extensions should work too, although I've only tested (and not much) the
@@ -69,6 +71,5 @@ enough to verify that it works.) XKB poses several extremely difficult
 problems that XCB also has trouble with. More info on that can be found at
 http://cgit.freedesktop.org/xcb/libxcb/tree/doc/xkb_issues and
 http://cgit.freedesktop.org/xcb/libxcb/tree/doc/xkb_internals.
-
 */
 package main

@@ -16,6 +16,5 @@ library (eg. xgbutil: https://github.com/jezek/xgbutil).
 There are also examples of using the Xinerama and RandR extensions, if you're
 interested in querying information about your active heads. In RandR's case,
 you can also reconfigure your heads, but the example doesn't cover that.
-
 */
 package documentation
