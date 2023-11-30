@@ -258,7 +258,7 @@ func (c *Conn) generateXIds() {
 			// TODO: Use the XC Misc extension to look for released ids.
 			id = xid{
 				id:  0,
-				err: errors.New("There are no more available resource identifiers."),
+				err: errors.New("there are no more available resource identifiers"),
 			}
 		} else {
 			last += inc

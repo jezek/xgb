@@ -87,12 +87,12 @@ func (c Cookie) Reply() ([]byte, error) {
 // not be used.
 func (c Cookie) replyChecked() ([]byte, error) {
 	if c.replyChan == nil {
-		return nil, errors.New("Cannot call 'replyChecked' on a cookie that " +
-			"is not expecting a *reply* or an error.")
+		return nil, errors.New("cannot call 'replyChecked' on a cookie that " +
+			"is not expecting a *reply* or an error")
 	}
 	if c.errorChan == nil {
-		return nil, errors.New("Cannot call 'replyChecked' on a cookie that " +
-			"is not expecting a reply or an *error*.")
+		return nil, errors.New("cannot call 'replyChecked' on a cookie that " +
+			"is not expecting a reply or an *error*")
 	}
 
 	select {
@@ -118,8 +118,8 @@ func (c Cookie) replyChecked() ([]byte, error) {
 // not be used.
 func (c Cookie) replyUnchecked() ([]byte, error) {
 	if c.replyChan == nil {
-		return nil, errors.New("Cannot call 'replyUnchecked' on a cookie " +
-			"that is not expecting a *reply*.")
+		return nil, errors.New("cannot call 'replyUnchecked' on a cookie " +
+			"that is not expecting a *reply*")
 	}
 
 	select {
@@ -147,12 +147,12 @@ func (c Cookie) replyUnchecked() ([]byte, error) {
 // not be used.
 func (c Cookie) Check() error {
 	if c.replyChan != nil {
-		return errors.New("Cannot call 'Check' on a cookie that is " +
-			"expecting a *reply*. Use 'Reply' instead.")
+		return errors.New("cannot call 'Check' on a cookie that is " +
+			"expecting a *reply*. Use 'Reply' instead")
 	}
 	if c.errorChan == nil {
-		return errors.New("Cannot call 'Check' on a cookie that is " +
-			"not expecting a possible *error*.")
+		return errors.New("cannot call 'Check' on a cookie that is " +
+			"not expecting a possible *error*")
 	}
 
 	// First do a quick non-blocking check to see if we've been pinged.
