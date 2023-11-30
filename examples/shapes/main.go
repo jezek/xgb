@@ -273,15 +273,17 @@ func main() {
 }
 
 // Char2b is defined as
-// 	Byte1 byte
-// 	Byte2 byte
+//
+//	Byte1 byte
+//	Byte2 byte
+//
 // and is used as a utf16 character.
 // This function takes a string and converts each rune into a char2b.
 func convertStringToChar2b(s string) []xproto.Char2b {
 	var chars []xproto.Char2b
 	var p []uint16
 
-	for _, r := range []rune(s) {
+	for _, r := range s {
 		p = utf16.Encode([]rune{r})
 		if len(p) == 1 {
 			chars = append(chars, convertUint16ToChar2b(p[0]))
