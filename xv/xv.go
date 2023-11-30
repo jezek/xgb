@@ -910,7 +910,7 @@ func ImageFormatInfoListBytes(buf []byte, list []ImageFormatInfo) int {
 // ImageFormatInfoListSize computes the size (bytes) of a list of ImageFormatInfo values.
 func ImageFormatInfoListSize(list []ImageFormatInfo) int {
 	size := 0
-	for _ = range list {
+	for range list {
 		size += 128
 	}
 	return size
