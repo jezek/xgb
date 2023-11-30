@@ -2,8 +2,8 @@ package main
 
 import (
 	"encoding/xml"
-	"io/ioutil"
 	"log"
+	"os"
 )
 
 type XML struct {
@@ -37,7 +37,7 @@ type XMLImports []*XMLImport
 
 func (imports XMLImports) Eval() {
 	for _, imp := range imports {
-		xmlBytes, err := ioutil.ReadFile(*protoPath + "/" + imp.Name + ".xml")
+		xmlBytes, err := os.ReadFile(*protoPath + "/" + imp.Name + ".xml")
 		if err != nil {
 			log.Fatalf("Could not read X protocol description for import "+
 				"'%s' because: %s", imp.Name, err)

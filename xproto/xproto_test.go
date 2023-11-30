@@ -42,8 +42,6 @@ func init() {
 		log.Fatal(err)
 	}
 
-	rand.Seed(time.Now().UnixNano())
-
 	go grabEvents()
 }
 
