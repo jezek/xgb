@@ -38,13 +38,13 @@ func ReadSimpleSingleField(c *Context, name string, typ Type) {
 		var val string
 		switch t.Size().Eval() {
 		case 1:
-			val = fmt.Sprintf("buf[b]")
+			val = "buf[b]"
 		case 2:
-			val = fmt.Sprintf("xgb.Get16(buf[b:])")
+			val = "xgb.Get16(buf[b:])"
 		case 4:
-			val = fmt.Sprintf("xgb.Get32(buf[b:])")
+			val = "xgb.Get32(buf[b:])"
 		case 8:
-			val = fmt.Sprintf("xgb.Get64(buf[b:])")
+			val = "xgb.Get64(buf[b:])"
 		}
 
 		// We need to convert base types if they aren't uintXX or byte
