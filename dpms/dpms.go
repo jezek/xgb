@@ -43,6 +43,102 @@ const (
 	DPMSModeOff     = 3
 )
 
+const (
+	EventMaskInfoNotify = 1
+)
+
+// InfoNotify is the event number for a InfoNotifyEvent.
+const InfoNotify = 0
+
+type InfoNotifyEvent struct {
+	Sequence uint16
+	// padding: 2 bytes
+	Timestamp  xproto.Timestamp
+	PowerLevel uint16
+	State      bool
+	// padding: 21 bytes
+}
+
+// InfoNotifyEventNew constructs a InfoNotifyEvent value that implements xgb.Event from a byte slice.
+func InfoNotifyEventNew(buf []byte) xgb.Event {
+	v := InfoNotifyEvent{}
+	b := 1 // don't read event number
+
+	b += 2 // padding
+
+	v.Sequence = xgb.Get16(buf[b:])
+	b += 2
+
+	v.Timestamp = xproto.Timestamp(xgb.Get32(buf[b:]))
+	b += 4
+
+	v.PowerLevel = xgb.Get16(buf[b:])
+	b += 2
+
+	if buf[b] == 1 {
+		v.State = true
+	} else {
+		v.State = false
+	}
+	b += 1
+
+	b += 21 // padding
+
+	return v
+}
+
+// Bytes writes a InfoNotifyEvent value to a byte slice.
+func (v InfoNotifyEvent) Bytes() []byte {
+	buf := make([]byte, 32)
+	b := 0
+
+	// write event number
+	buf[b] = 0
+	b += 1
+
+	b += 2 // padding
+
+	b += 2 // skip sequence number
+
+	xgb.Put32(buf[b:], uint32(v.Timestamp))
+	b += 4
+
+	xgb.Put16(buf[b:], v.PowerLevel)
+	b += 2
+
+	if v.State {
+		buf[b] = 1
+	} else {
+		buf[b] = 0
+	}
+	b += 1
+
+	b += 21 // padding
+
+	return buf
+}
+
+// SequenceId returns the sequence id attached to the InfoNotify event.
+// Events without a sequence number (KeymapNotify) return 0.
+// This is mostly used internally.
+func (v InfoNotifyEvent) SequenceId() uint16 {
+	return v.Sequence
+}
+
+// String is a rudimentary string representation of InfoNotifyEvent.
+func (v InfoNotifyEvent) String() string {
+	fieldVals := make([]string, 0, 5)
+	fieldVals = append(fieldVals, xgb.Sprintf("Sequence: %d", v.Sequence))
+	fieldVals = append(fieldVals, xgb.Sprintf("Timestamp: %d", v.Timestamp))
+	fieldVals = append(fieldVals, xgb.Sprintf("PowerLevel: %d", v.PowerLevel))
+	fieldVals = append(fieldVals, xgb.Sprintf("State: %t", v.State))
+	return "InfoNotify {" + xgb.StringsJoin(fieldVals, ", ") + "}"
+}
+
+func init() {
+	xgb.NewExtEventFuncs["DPMS"][0] = InfoNotifyEventNew
+}
+
 // Skipping definition for base type 'Bool'
 
 // Skipping definition for base type 'Byte'
@@ -643,6 +739,67 @@ func infoRequest(c *xgb.Conn) []byte {
 
 	xgb.Put16(buf[b:], uint16(size/4)) // write request size in 4-byte units
 	b += 2
+
+	return buf
+}
+
+// SelectInputCookie is a cookie used only for SelectInput requests.
+type SelectInputCookie struct {
+	*xgb.Cookie
+}
+
+// SelectInput sends an unchecked request.
+// If an error occurs, it can only be retrieved using xgb.WaitForEvent or xgb.PollForEvent.
+func SelectInput(c *xgb.Conn, EventMask uint32) SelectInputCookie {
+	c.ExtLock.RLock()
+	defer c.ExtLock.RUnlock()
+	if _, ok := c.Extensions["DPMS"]; !ok {
+		panic("Cannot issue request 'SelectInput' using the uninitialized extension 'DPMS'. dpms.Init(connObj) must be called first.")
+	}
+	cookie := c.NewCookie(false, false)
+	c.NewRequest(selectInputRequest(c, EventMask), cookie)
+	return SelectInputCookie{cookie}
+}
+
+// SelectInputChecked sends a checked request.
+// If an error occurs, it can be retrieved using SelectInputCookie.Check()
+func SelectInputChecked(c *xgb.Conn, EventMask uint32) SelectInputCookie {
+	c.ExtLock.RLock()
+	defer c.ExtLock.RUnlock()
+	if _, ok := c.Extensions["DPMS"]; !ok {
+		panic("Cannot issue request 'SelectInput' using the uninitialized extension 'DPMS'. dpms.Init(connObj) must be called first.")
+	}
+	cookie := c.NewCookie(true, false)
+	c.NewRequest(selectInputRequest(c, EventMask), cookie)
+	return SelectInputCookie{cookie}
+}
+
+// Check returns an error if one occurred for checked requests that are not expecting a reply.
+// This cannot be called for requests expecting a reply, nor for unchecked requests.
+func (cook SelectInputCookie) Check() error {
+	return cook.Cookie.Check()
+}
+
+// Write request to wire for SelectInput
+// selectInputRequest writes a SelectInput request to a byte slice.
+func selectInputRequest(c *xgb.Conn, EventMask uint32) []byte {
+	size := 8
+	b := 0
+	buf := make([]byte, size)
+
+	c.ExtLock.RLock()
+	buf[b] = c.Extensions["DPMS"]
+	c.ExtLock.RUnlock()
+	b += 1
+
+	buf[b] = 8 // request opcode
+	b += 1
+
+	xgb.Put16(buf[b:], uint16(size/4)) // write request size in 4-byte units
+	b += 2
+
+	xgb.Put32(buf[b:], EventMask)
+	b += 4
 
 	return buf
 }

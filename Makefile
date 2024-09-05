@@ -47,15 +47,13 @@ install: bigreq.i composite.i damage.i dpms.i dri2.i ge.i glx.i randr.i \
 %.i:
 	(cd $* ; go install)
 
-# xc_misc is special because it has an underscore.
-# There's probably a way to do this better, but Makefiles aren't my strong suit.
-xc_misc.xml: build-xgbgen
-	mkdir -p xcmisc
-	xgbgen/xgbgen --proto-path $(XPROTO) $(XPROTO)/xc_misc.xml > xcmisc/xcmisc.go
-
 %.xml: build-xgbgen
-	mkdir -p $*
-	xgbgen/xgbgen --proto-path $(XPROTO) $(XPROTO)/$*.xml > $*/$*.go
+	mkdir -p $(subst _,,$*)
+	xgbgen/xgbgen --output-package $(subst _,,$*) --proto-path $(XPROTO) $(XPROTO)/$*.xml
+
+%.delve: build-xgbgen
+	mkdir -p $(subst _,,$*)
+	dlv debug github.com/jezek/xgb/xgbgen -- --output-package $(subst _,,$*) --gofmt=false --proto-path $(XPROTO) $(XPROTO)/$*.xml
 
 # Just test the xproto core protocol for now.
 test:

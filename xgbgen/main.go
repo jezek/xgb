@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"io/ioutil"
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -12,6 +12,8 @@ import (
 var (
 	protoPath = flag.String("proto-path",
 		"/usr/share/xcb", "path to directory of X protocol XML files")
+	outputPackage = flag.String("output-package",
+		"", "name of package to generate in the format (package)/(package).go")
 	gofmt = flag.Bool("gofmt", true,
 		"When disabled, gofmt will not be run before outputting Go code")
 )
@@ -40,7 +42,7 @@ func main() {
 	}
 
 	// Read the single XML file into []byte
-	xmlBytes, err := ioutil.ReadFile(flag.Arg(0))
+	xmlBytes, err := os.ReadFile(flag.Arg(0))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -49,12 +51,21 @@ func main() {
 	c := newContext()
 	c.Morph(xmlBytes)
 
+	out := os.Stdout
+	if *outputPackage != "" && *outputPackage != "-" {
+		out, err = os.Create(fmt.Sprintf("%s/%s.go", *outputPackage, *outputPackage))
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer out.Close()
+	}
+
 	if !*gofmt {
-		c.out.WriteTo(os.Stdout)
+		c.out.WriteTo(out)
 	} else {
 		cmdGofmt := exec.Command("gofmt")
 		cmdGofmt.Stdin = c.out
-		cmdGofmt.Stdout = os.Stdout
+		cmdGofmt.Stdout = out
 		cmdGofmt.Stderr = os.Stderr
 		err = cmdGofmt.Run()
 		if err != nil {
