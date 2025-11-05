@@ -87,6 +87,7 @@ func NewConn() (*Conn, error) {
 // If 'display' is empty it will be taken from os.Getenv("DISPLAY").
 //
 // Examples:
+//
 //	NewConn(":1") -> net.Dial("unix", "", "/tmp/.X11-unix/X1")
 //	NewConn("/tmp/launch-12/:0") -> net.Dial("unix", "", "/tmp/launch-12/:0")
 //	NewConn("hostname:2.1") -> net.Dial("tcp", "", "hostname:6002")
@@ -112,6 +113,24 @@ func NewConnNet(netConn net.Conn) (*Conn, error) {
 	// First connect. This reads authority, checks DISPLAY environment
 	// variable, and loads the initial Setup info.
 	err := c.connectNet(netConn)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return postNewConn(c)
+}
+
+// NewConnNetViaHexCode is just like NewConnNet and
+// creates a new X connection from an existing net.Conn using hex-encoded authentication.
+// The hexCode parameter should be a 32-character hex string representing MIT-MAGIC-COOKIE-1 authentication data.
+// Returns a fully initialized Conn ready for use with X protocol operations.
+func NewConnNetViaHexCode(netConn net.Conn, hexCode string) (*Conn, error) {
+	c := &Conn{}
+
+	// Connect using the provided network connection and hex-encoded authentication,
+	// then load the initial Setup info.
+	err := c.connectNetViaHexCode(netConn, hexCode)
 
 	if err != nil {
 		return nil, err
