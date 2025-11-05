@@ -29,19 +29,35 @@ func (c *Conn) connect(display string) error {
 		return err
 	}
 
-	return c.postConnect()
+	return c.postConnect("")
 }
 
 // connect init from to the net.Conn,
 func (c *Conn) connectNet(netConn net.Conn) error {
 	c.conn = netConn
-	return c.postConnect()
+	return c.postConnect("")
+}
+
+// connectNetViaHexCode initializes the X connection using an existing net.Conn and a hex-encoded authentication cookie.
+// The hexCode parameter should be a 32-character hex string representing the MIT-MAGIC-COOKIE-1 authentication data.
+func (c *Conn) connectNetViaHexCode(netConn net.Conn, hexCode string) error {
+	c.conn = netConn
+	return c.postConnect("")
 }
 
 // do the postConnect action after Conn get it's underly net.Conn
-func (c *Conn) postConnect() error {
+func (c *Conn) postConnect(hexCode string) error {
 	// Get authentication data
-	authName, authData, err := readAuthority(c.host, c.display)
+	var authName string
+	var authData []byte
+	var err error
+
+	if hexCode == "" {
+		authName, authData, err = readAuthority(c.host, c.display)
+	} else {
+		authName, authData, err = readAuthorityUsingHexCode(hexCode)
+	}
+
 	noauth := false
 	if err != nil {
 		Logger.Printf("Could not get authority info: %v", err)
