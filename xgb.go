@@ -121,16 +121,16 @@ func NewConnNet(netConn net.Conn) (*Conn, error) {
 	return postNewConn(c)
 }
 
-// NewConnNetViaHexCode is just like NewConnNet and
+// NewConnNetWithCookieHex is just like NewConnNet and
 // creates a new X connection from an existing net.Conn using hex-encoded authentication.
-// The hexCode parameter should be a 32-character hex string representing MIT-MAGIC-COOKIE-1 authentication data.
+// The cookieHex parameter should be a 32-character hex string representing MIT-MAGIC-COOKIE-1 authentication data.
 // Returns a fully initialized Conn ready for use with X protocol operations.
-func NewConnNetViaHexCode(netConn net.Conn, hexCode string) (*Conn, error) {
+func NewConnNetWithCookieHex(netConn net.Conn, cookieHex string) (*Conn, error) {
 	c := &Conn{}
 
 	// Connect using the provided network connection and hex-encoded authentication,
 	// then load the initial Setup info.
-	err := c.connectNetViaHexCode(netConn, hexCode)
+	err := c.connectNetWithCookieHex(netConn, cookieHex)
 
 	if err != nil {
 		return nil, err

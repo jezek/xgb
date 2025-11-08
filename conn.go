@@ -38,24 +38,25 @@ func (c *Conn) connectNet(netConn net.Conn) error {
 	return c.postConnect("")
 }
 
-// connectNetViaHexCode initializes the X connection using an existing net.Conn and a hex-encoded authentication cookie.
-// The hexCode parameter should be a 32-character hex string representing the MIT-MAGIC-COOKIE-1 authentication data.
-func (c *Conn) connectNetViaHexCode(netConn net.Conn, hexCode string) error {
+// connectNetWithCookieHex initializes the X connection using an existing net.Conn and a hex-encoded
+// authentication cookie. The cookieHex parameter should be a 32-character hex string representing
+// the MIT-MAGIC-COOKIE-1 authentication data.
+func (c *Conn) connectNetWithCookieHex(netConn net.Conn, cookieHex string) error {
 	c.conn = netConn
-	return c.postConnect(hexCode)
+	return c.postConnect(cookieHex)
 }
 
 // do the postConnect action after Conn get it's underly net.Conn
-func (c *Conn) postConnect(hexCode string) error {
+func (c *Conn) postConnect(cookieHex string) error {
 	// Get authentication data
 	var authName string
 	var authData []byte
 	var err error
 
-	if hexCode == "" {
+	if cookieHex == "" {
 		authName, authData, err = readAuthority(c.host, c.display)
 	} else {
-		authName, authData, err = readAuthorityUsingHexCode(hexCode)
+		authName, authData, err = readAuthorityFromCookieHex(cookieHex)
 	}
 
 	noauth := false
