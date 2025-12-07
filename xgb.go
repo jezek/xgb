@@ -441,6 +441,20 @@ func (c *Conn) writeBuffer(buf []byte) error {
 	return nil
 }
 
+// writeEvent checks whether the eventChan buffer is full before writing to it.
+// If the buffer is full, this function returns false, and logs a message.
+func (c *Conn) writeEvent(e eventOrError) bool {
+	select {
+	case c.eventChan <- e:
+		return true
+	default:
+		Logger.Printf("%s\n%s",
+			"The event channel for the connection is full.",
+			"Are you calling X.WaitForEvent or X.PollForEvent frequently enough?")
+		return false
+	}
+}
+
 // readResponses is a goroutine that reads events, errors and
 // replies off the wire.
 // When an event is read, it is always added to the event channel.
@@ -472,7 +486,7 @@ func (c *Conn) readResponses() {
 			default:
 			}
 			Logger.Printf("A read error is unrecoverable: %s", err)
-			c.eventChan <- err
+			c.writeEvent(err)
 			return
 		}
 		switch buf[0] {
@@ -501,7 +515,7 @@ func (c *Conn) readResponses() {
 				copy(biggerBuf[:32], buf)
 				if _, err := io.ReadFull(c.conn, biggerBuf[32:]); err != nil {
 					Logger.Printf("A read error is unrecoverable: %s", err)
-					c.eventChan <- err
+					c.writeEvent(err)
 					return
 				}
 				replyBytes = biggerBuf
@@ -523,7 +537,9 @@ func (c *Conn) readResponses() {
 					"for event with number %d.", evNum)
 				continue
 			}
-			c.eventChan <- newEventFun(buf)
+			if !c.writeEvent(newEventFun(buf)) {
+				return
+			}
 			continue
 		}
 
@@ -543,7 +559,9 @@ func (c *Conn) readResponses() {
 					if cookie.errorChan != nil {
 						cookie.errorChan <- err
 					} else { // asynchronous processing
-						c.eventChan <- err
+						if !c.writeEvent(err) {
+							return
+						}
 						// if this is an unchecked reply, ping the cookie too
 						if cookie.pingChan != nil {
 							cookie.pingChan <- true
