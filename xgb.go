@@ -71,6 +71,8 @@ type Conn struct {
 	// Extensions is a map from extension name to major opcode. It should
 	// not be used. It is exported for use in the extension sub-packages.
 	Extensions map[string]byte
+
+	idRangeFunc func(*Conn) (uint32, uint32, error)
 }
 
 // NewConn creates a new connection instance. It initializes locks, data
@@ -165,6 +167,10 @@ func (c *Conn) Close() {
 	case c.reqChan <- nil:
 	case <-c.doneSend:
 	}
+}
+
+func (c *Conn) SetIDRangeFunc(f func(*Conn) (uint32, uint32, error)) {
+	c.idRangeFunc = f
 }
 
 // Event is an interface that can contain any of the events returned by the
@@ -272,11 +278,28 @@ func (c *Conn) generateXIds() {
 	last := uint32(0)
 	for {
 		id := xid{}
-		if last > 0 && last >= max-inc+1 {
-			// TODO: Use the XC Misc extension to look for released ids.
-			id = xid{
-				id:  0,
-				err: errors.New("There are no more available resource identifiers."),
+		if last >= max-inc+1 {
+			if c.idRangeFunc == nil {
+				id = xid{
+					id:  0,
+					err: errors.New("there are no more available resource identifiers, and no re-use configured"),
+				}
+			} else {
+				start, count, err := c.idRangeFunc(c)
+				if err != nil {
+					id = xid{
+						id:  0,
+						err: errors.New("error getting ID re-use: " + err.Error()),
+					}
+				} else {
+					last = start
+					max = start + (count-1)*inc
+
+					id = xid{
+						id:  last | c.setupResourceIdBase,
+						err: nil,
+					}
+				}
 			}
 		} else {
 			last += inc
