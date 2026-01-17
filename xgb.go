@@ -72,7 +72,8 @@ type Conn struct {
 	// not be used. It is exported for use in the extension sub-packages.
 	Extensions map[string]byte
 
-	idRangeFunc func(*Conn) (uint32, uint32, error)
+	idRangeFuncMu sync.RWMutex
+	idRangeFunc   func(*Conn) (uint32, uint32, error)
 }
 
 // NewConn creates a new connection instance. It initializes locks, data
@@ -170,6 +171,8 @@ func (c *Conn) Close() {
 }
 
 func (c *Conn) SetIDRangeFunc(f func(*Conn) (uint32, uint32, error)) {
+	c.idRangeFuncMu.Lock()
+	defer c.idRangeFuncMu.Unlock()
 	c.idRangeFunc = f
 }
 
@@ -279,13 +282,17 @@ func (c *Conn) generateXIds() {
 	for {
 		id := xid{}
 		if last >= max-inc+1 {
-			if c.idRangeFunc == nil {
+			c.idRangeFuncMu.RLock()
+			rangeFunc := c.idRangeFunc
+			c.idRangeFuncMu.RUnlock()
+
+			if rangeFunc == nil {
 				id = xid{
 					id:  0,
 					err: errors.New("there are no more available resource identifiers, and no re-use configured"),
 				}
 			} else {
-				start, count, err := c.idRangeFunc(c)
+				start, count, err := rangeFunc(c)
 				if err != nil {
 					id = xid{
 						id:  0,
