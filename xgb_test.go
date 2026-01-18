@@ -261,19 +261,19 @@ func TestSetIDRangeFuncRace(t *testing.T) {
 
 	const iters = 1000
 	go func() {
-		defer wg.Done()
 		<-start
 		for i := 0; i < iters; i++ {
 			c.SetIDRangeFunc(idRangeFunc)
 			runtime.Gosched()
 		}
+		wg.Done()
 	}()
 	go func() {
-		defer wg.Done()
 		<-start
 		for i := 0; i < iters; i++ {
 			_, _ = c.NewId()
 			runtime.Gosched()
 		}
+		wg.Done()
 	}()
 }

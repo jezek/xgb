@@ -176,8 +176,8 @@ func (c *Conn) Close() {
 // the re-use provider by calling this function for you.
 func (c *Conn) SetIDRangeFunc(f func(*Conn) (uint32, uint32, error)) {
 	c.idRangeFuncMu.Lock()
-	defer c.idRangeFuncMu.Unlock()
 	c.idRangeFunc = f
+	c.idRangeFuncMu.Unlock()
 }
 
 // Event is an interface that can contain any of the events returned by the
