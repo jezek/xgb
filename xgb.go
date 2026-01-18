@@ -297,6 +297,9 @@ func (c *Conn) generateXIds() {
 				}
 			} else {
 				start, count, err := rangeFunc(c)
+				if count == 0 && err == nil {
+					err = errors.New("error getting ID re-use, none returned")
+				}
 				if err != nil {
 					id = xid{
 						id:  0,
