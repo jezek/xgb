@@ -170,6 +170,10 @@ func (c *Conn) Close() {
 	}
 }
 
+// SetIDRangeFunc provides a function that allows re-use of IDs.
+// Without this implemented an application will eventually run out of identifiers.
+// An implementation of this is in the xgbutil repository, where the xgbutil.NewConnXgb will set up
+// the re-use provider by calling this function for you.
 func (c *Conn) SetIDRangeFunc(f func(*Conn) (uint32, uint32, error)) {
 	c.idRangeFuncMu.Lock()
 	defer c.idRangeFuncMu.Unlock()
