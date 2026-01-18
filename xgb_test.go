@@ -3,6 +3,8 @@ package xgb
 import (
 	"errors"
 	"fmt"
+	"runtime"
+	"sync"
 	"testing"
 	"time"
 )
@@ -222,4 +224,58 @@ func TestConnOnNonBlockingDummyXServer(t *testing.T) {
 
 		})
 	}
+}
+
+// This test is meant to be exercised with the race detector (go test -race).
+func TestSetIDRangeFuncRace(t *testing.T) {
+	s := newDummyNetConn("dummyX", newDummyXServerReplier())
+	defer s.Close()
+
+	c, err := postNewConn(&Conn{
+		conn:                s,
+		setupResourceIdBase: 0,
+		setupResourceIdMask: 1,
+	})
+	if err != nil {
+		t.Fatalf("connect to dummy server error: %v", err)
+	}
+
+	done := make(chan struct{})
+	var wg sync.WaitGroup
+	wg.Add(2)
+
+	idRangeFunc := func(*Conn) (uint32, uint32, error) {
+		return 1, 1, nil
+	}
+
+	go func() {
+		defer wg.Done()
+		for {
+			select {
+			case <-done:
+				return
+			default:
+				c.SetIDRangeFunc(idRangeFunc)
+				runtime.Gosched()
+			}
+		}
+	}()
+
+	go func() {
+		defer wg.Done()
+		for {
+			select {
+			case <-done:
+				return
+			default:
+				_, _ = c.NewId()
+				runtime.Gosched()
+			}
+		}
+	}()
+
+	time.Sleep(25 * time.Millisecond)
+	close(done)
+	c.Close()
+	wg.Wait()
 }
