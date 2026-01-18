@@ -228,6 +228,9 @@ func TestConnOnNonBlockingDummyXServer(t *testing.T) {
 
 // This test is meant to be exercised with the race detector (go test -race).
 func TestSetIDRangeFuncRace(t *testing.T) {
+	prevProcs := runtime.GOMAXPROCS(2)
+	defer runtime.GOMAXPROCS(prevProcs)
+
 	s := newDummyNetConn("dummyX", newDummyXServerReplier())
 	defer s.Close()
 
@@ -239,43 +242,38 @@ func TestSetIDRangeFuncRace(t *testing.T) {
 	if err != nil {
 		t.Fatalf("connect to dummy server error: %v", err)
 	}
+	defer func() {
+		c.Close()
+		<-c.doneSend
+		<-c.doneRead
+	}()
 
-	done := make(chan struct{})
 	var wg sync.WaitGroup
 	wg.Add(2)
+	defer wg.Wait()
+
+	start := make(chan struct{})
+	defer close(start)
 
 	idRangeFunc := func(*Conn) (uint32, uint32, error) {
 		return 1, 1, nil
 	}
 
+	const iters = 1000
 	go func() {
 		defer wg.Done()
-		for {
-			select {
-			case <-done:
-				return
-			default:
-				c.SetIDRangeFunc(idRangeFunc)
-				runtime.Gosched()
-			}
+		<-start
+		for i := 0; i < iters; i++ {
+			c.SetIDRangeFunc(idRangeFunc)
+			runtime.Gosched()
 		}
 	}()
-
 	go func() {
 		defer wg.Done()
-		for {
-			select {
-			case <-done:
-				return
-			default:
-				_, _ = c.NewId()
-				runtime.Gosched()
-			}
+		<-start
+		for i := 0; i < iters; i++ {
+			_, _ = c.NewId()
+			runtime.Gosched()
 		}
 	}()
-
-	time.Sleep(25 * time.Millisecond)
-	close(done)
-	c.Close()
-	wg.Wait()
 }
